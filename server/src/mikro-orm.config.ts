@@ -1,10 +1,9 @@
 import { __prod__ } from "./constants"
-import { Post } from "./entities/Posts"
 import { MikroORM } from '@mikro-orm/core'; 
 import path from "path";
 
 export default {
-  entities: [Post],
+  entities: [path.join(__dirname, './entities')],
   dbName: 'lireddit',
   type: 'postgresql',
   debug: !__prod__,

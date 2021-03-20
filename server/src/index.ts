@@ -12,6 +12,7 @@ import { UserResolver } from "./resolvers/user";
 import mikroConfig from './mikro-orm.config';
 import connectRedis from 'connect-redis';
 import { MyContext } from "./types";
+import cors from 'cors';
 
 const main = async () => {
   const app = express();
@@ -21,6 +22,13 @@ const main = async () => {
   
   await orm.getMigrator().up();
   
+  app.use(
+    cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+    }),
+  );
+
   app.use(
     session({
       name: 'qid',
@@ -48,7 +56,7 @@ const main = async () => {
     context: ({ req, res }: MyContext) => ({ em: orm.em, req, res }),
   })
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, cors: false });
 
   app.listen(__port__, () => {
     console.log(`Server started on localhost: ${__port__}`)

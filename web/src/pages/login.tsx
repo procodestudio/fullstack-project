@@ -5,15 +5,15 @@ import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 import InputField from '../components/InputField';
 import Wrapper from '../components/Wrapper';
-import { useRegisterMutation } from '../graphql/generated/graphql';
+import { useLoginMutation } from '../graphql/generated/graphql';
 import { createUrlClient } from '../utils/createUrqlClient';
 import { toErrorMap } from '../utils/toErrorMap';
 
-interface registerProps { }
+interface loginProps { }
 
-const Register: React.FC<registerProps> = () => {
+const Login: React.FC<loginProps> = () => {
   const router = useRouter();
-  const [, register] = useRegisterMutation();
+  const [, login] = useLoginMutation();
 
   return (
     <Wrapper variant="small">
@@ -23,11 +23,11 @@ const Register: React.FC<registerProps> = () => {
           password: "",
         }}
         onSubmit={async (values, { setErrors }) => {
-          const { data } = await register(values);
+          const { data } = await login({ options: values });
 
-          if (data?.register.errors) {
-            setErrors(toErrorMap(data.register.errors))
-          } else if (data?.register.user) {
+          if (data?.login.errors) {
+            setErrors(toErrorMap(data.login.errors))
+          } else if (data?.login.user) {
             router.push('/');
           }
         }}
@@ -54,7 +54,7 @@ const Register: React.FC<registerProps> = () => {
               colorScheme="blue"
               variant="outline"
             >
-              Register
+              Login
             </Button>
           </Form>
         )}
@@ -65,4 +65,4 @@ const Register: React.FC<registerProps> = () => {
 
 export default withUrqlClient(
   createUrlClient,
-)(Register);
+)(Login);
